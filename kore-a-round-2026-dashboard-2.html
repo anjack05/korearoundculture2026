@@ -1,0 +1,1004 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kore·A·Round Culture 2026 — 프로젝트 대시보드</title>
+<style>
+  :root {
+    --bg: #ffffff;
+    --bg2: #f7f6f3;
+    --bg3: #efeeeb;
+    --text: #1a1a1a;
+    --text2: #6b6b6b;
+    --text3: #999;
+    --border: rgba(0,0,0,0.08);
+    --border2: rgba(0,0,0,0.14);
+    --accent: #1a1a1a;
+    --green: #3b7a57;
+    --green-bg: #eaf4ee;
+    --amber: #b06000;
+    --amber-bg: #fff3e0;
+    --blue: #1a5fa8;
+    --blue-bg: #e8f0fb;
+    --red: #b53030;
+    --red-bg: #fdecea;
+    --gray-bg: #f0efec;
+    --purple: #5c3d9e;
+    --purple-bg: #f0edfb;
+    --tag-h: 22px;
+    --radius: 6px;
+    --radius-lg: 10px;
+    font-family: 'Pretendard', 'Apple SD Gothic Neo', -apple-system, sans-serif;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #1e1e1e; --bg2: #252525; --bg3: #2c2c2c;
+      --text: #e8e6df; --text2: #9e9b93; --text3: #666;
+      --border: rgba(255,255,255,0.08); --border2: rgba(255,255,255,0.14);
+      --green: #5cb87a; --green-bg: #1a2e22;
+      --amber: #d4900a; --amber-bg: #2a1f0a;
+      --blue: #5b9de8; --blue-bg: #0f1f3a;
+      --red: #e06060; --red-bg: #2e1010;
+      --gray-bg: #2c2c2c; --purple: #9e7fef; --purple-bg: #1e1630;
+    }
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: var(--bg); color: var(--text); font-size: 14px; line-height: 1.6; }
+  a { color: inherit; text-decoration: none; }
+
+  /* ── Layout ── */
+  .sidebar { position: fixed; top: 0; left: 0; width: 240px; height: 100vh; background: var(--bg2); border-right: 1px solid var(--border); padding: 16px 0; overflow-y: auto; z-index: 10; }
+  .main { margin-left: 240px; padding: 40px 48px 80px; max-width: 960px; }
+  @media (max-width: 768px) { .sidebar { display: none; } .main { margin-left: 0; padding: 24px 20px; } }
+
+  /* ── Sidebar ── */
+  .sb-logo { padding: 4px 16px 20px; font-size: 13px; font-weight: 600; color: var(--text); display: flex; align-items: center; gap: 8px; }
+  .sb-logo-dot { width: 20px; height: 20px; background: var(--accent); border-radius: 4px; }
+  .sb-section { padding: 0 8px 12px; }
+  .sb-section-label { font-size: 11px; font-weight: 600; color: var(--text3); text-transform: uppercase; letter-spacing: 0.08em; padding: 8px 8px 4px; }
+  .sb-item { display: flex; align-items: center; gap: 8px; padding: 5px 8px; border-radius: var(--radius); cursor: pointer; font-size: 13px; color: var(--text2); transition: background 0.1s; }
+  .sb-item:hover, .sb-item.active { background: var(--bg3); color: var(--text); }
+  .sb-item .icon { font-size: 14px; width: 18px; text-align: center; }
+  .sb-divider { border: none; border-top: 1px solid var(--border); margin: 8px 16px; }
+
+  /* ── Page Header ── */
+  .page-icon { font-size: 36px; margin-bottom: 8px; }
+  .page-title { font-size: 28px; font-weight: 700; color: var(--text); margin-bottom: 4px; }
+  .page-sub { font-size: 14px; color: var(--text2); margin-bottom: 28px; }
+  .page-sub span { margin-right: 16px; }
+
+  /* ── Stats Row ── */
+  .stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 32px; }
+  @media (max-width: 600px) { .stats { grid-template-columns: repeat(2,1fr); } }
+  .stat-card { background: var(--bg2); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 16px; }
+  .stat-label { font-size: 11px; color: var(--text3); text-transform: uppercase; letter-spacing: 0.07em; margin-bottom: 6px; }
+  .stat-val { font-size: 22px; font-weight: 700; color: var(--text); }
+  .stat-sub { font-size: 11px; color: var(--text2); margin-top: 2px; }
+
+  /* ── Section ── */
+  .section { margin-bottom: 40px; }
+  .section-title { font-size: 16px; font-weight: 600; color: var(--text); margin-bottom: 14px; display: flex; align-items: center; gap: 8px; }
+  .section-title::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+
+  /* ── Tags / Badges ── */
+  .tag { display: inline-flex; align-items: center; height: var(--tag-h); padding: 0 8px; border-radius: 4px; font-size: 11px; font-weight: 500; white-space: nowrap; }
+  .tag.green  { background: var(--green-bg);  color: var(--green); }
+  .tag.amber  { background: var(--amber-bg);  color: var(--amber); }
+  .tag.blue   { background: var(--blue-bg);   color: var(--blue); }
+  .tag.red    { background: var(--red-bg);    color: var(--red); }
+  .tag.gray   { background: var(--gray-bg);   color: var(--text2); }
+  .tag.purple { background: var(--purple-bg); color: var(--purple); }
+
+  /* ── Timeline (Phase) ── */
+  .timeline { display: flex; gap: 0; margin-bottom: 32px; overflow-x: auto; padding-bottom: 4px; }
+  .phase { flex: 1; min-width: 100px; }
+  .phase-bar { height: 6px; background: var(--border); border-radius: 3px; margin-bottom: 8px; position: relative; overflow: hidden; }
+  .phase-fill { height: 100%; border-radius: 3px; transition: width 0.4s; }
+  .phase-name { font-size: 11px; font-weight: 600; color: var(--text2); margin-bottom: 2px; }
+  .phase-date { font-size: 10px; color: var(--text3); }
+  .phase + .phase { margin-left: 16px; }
+
+  /* ── Table (Task List) ── */
+  .task-table { width: 100%; border-collapse: collapse; }
+  .task-table th { font-size: 11px; font-weight: 600; color: var(--text3); text-align: left; padding: 6px 12px; border-bottom: 1px solid var(--border); text-transform: uppercase; letter-spacing: 0.06em; }
+  .task-table td { padding: 9px 12px; border-bottom: 1px solid var(--border); vertical-align: middle; font-size: 13px; }
+  .task-table tr:hover td { background: var(--bg2); }
+  .task-table tr.done td { opacity: 0.5; }
+  .task-row { cursor: pointer; }
+
+  .cb { width: 16px; height: 16px; border-radius: 4px; border: 1.5px solid var(--border2); background: transparent; cursor: pointer; display: flex; align-items: center; justify-content: center; flex-shrink: 0; transition: background 0.15s, border-color 0.15s; }
+  .cb.checked { background: var(--accent); border-color: var(--accent); }
+  .cb.checked::after { content: ''; display: block; width: 9px; height: 5px; border-left: 1.5px solid #fff; border-bottom: 1.5px solid #fff; transform: rotate(-45deg) translate(1px,-1px); }
+
+  .task-name { display: flex; align-items: center; gap: 10px; }
+  .task-text { font-size: 13px; }
+  .done .task-text { text-decoration: line-through; color: var(--text3); }
+
+  /* ── Assignee ── */
+  .avatar { width: 24px; height: 24px; border-radius: 50%; background: var(--bg3); border: 1px solid var(--border); display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 600; color: var(--text2); flex-shrink: 0; }
+
+  /* ── Project Cards (10 programs) ── */
+  .program-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
+  @media (max-width: 600px) { .program-grid { grid-template-columns: 1fr; } }
+  .prog-card { background: var(--bg2); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 16px; cursor: pointer; transition: border-color 0.15s; }
+  .prog-card:hover { border-color: var(--border2); }
+  .prog-header { display: flex; align-items: flex-start; justify-content: space-between; gap: 8px; margin-bottom: 10px; }
+  .prog-title { font-size: 13px; font-weight: 600; color: var(--text); line-height: 1.4; }
+  .prog-country { font-size: 12px; color: var(--text2); margin-bottom: 8px; }
+  .prog-tags { display: flex; gap: 4px; flex-wrap: wrap; }
+  .prog-progress { margin-top: 10px; }
+  .prog-progress-bar { height: 3px; background: var(--border); border-radius: 2px; overflow: hidden; margin-top: 4px; }
+  .prog-progress-fill { height: 100%; border-radius: 2px; background: var(--accent); }
+  .prog-progress-label { font-size: 10px; color: var(--text3); margin-top: 3px; }
+
+  /* ── Checklist Section ── */
+  .checklist-block { background: var(--bg2); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 20px 24px; margin-bottom: 16px; }
+  .checklist-block h4 { font-size: 13px; font-weight: 600; color: var(--text); margin-bottom: 14px; display: flex; align-items: center; gap: 8px; }
+  .checklist-block h4 .tag { font-size: 10px; }
+  .check-item { display: flex; align-items: flex-start; gap: 10px; padding: 5px 0; border-bottom: 1px solid var(--border); }
+  .check-item:last-child { border-bottom: none; }
+  .check-text { font-size: 13px; color: var(--text); flex: 1; }
+  .check-meta { font-size: 11px; color: var(--text3); white-space: nowrap; }
+
+  /* ── Calendar Hint ── */
+  .month-row { display: flex; gap: 4px; overflow-x: auto; padding-bottom: 4px; margin-bottom: 28px; }
+  .month-chip { flex-shrink: 0; min-width: 54px; background: var(--bg2); border: 1px solid var(--border); border-radius: var(--radius); padding: 6px 10px; text-align: center; }
+  .month-chip .m { font-size: 11px; font-weight: 600; color: var(--text2); }
+  .month-chip .dot-row { display: flex; gap: 3px; justify-content: center; margin-top: 4px; flex-wrap: wrap; }
+  .month-chip .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--border2); }
+  .month-chip .dot.active { background: var(--accent); }
+  .month-chip.has-event { border-color: var(--border2); }
+
+  /* ── Inline notice ── */
+  .notice { background: var(--amber-bg); border: 1px solid rgba(176,96,0,0.2); border-radius: var(--radius); padding: 10px 14px; font-size: 12px; color: var(--amber); margin-bottom: 16px; display: flex; align-items: center; gap: 8px; }
+
+  /* ── Toggle row ── */
+  .toggle-row { display: flex; align-items: center; gap: 8px; padding: 6px 0; cursor: pointer; user-select: none; }
+  .toggle-row .arrow { font-size: 10px; color: var(--text3); transition: transform 0.2s; }
+  .toggle-row.open .arrow { transform: rotate(90deg); }
+  .toggle-content { display: none; padding-left: 22px; }
+  .toggle-content.show { display: block; }
+
+  /* ── Timeline Bar ── */
+  .gantt { margin: 0 0 28px; }
+  .gantt-row { display: flex; align-items: center; gap: 8px; margin-bottom: 5px; }
+  .gantt-label { width: 120px; font-size: 11px; color: var(--text2); text-align: right; flex-shrink: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .gantt-track { flex: 1; height: 18px; background: var(--bg3); border-radius: 3px; position: relative; overflow: visible; }
+  .gantt-bar { position: absolute; height: 100%; border-radius: 3px; top: 0; display: flex; align-items: center; padding-left: 6px; }
+  .gantt-bar span { font-size: 10px; color: rgba(255,255,255,0.85); font-weight: 500; white-space: nowrap; }
+  .gantt-months { display: flex; margin-left: 128px; margin-bottom: 2px; }
+  .gantt-month { flex: 1; font-size: 10px; color: var(--text3); text-align: center; }
+
+  .scroll-hint { font-size: 11px; color: var(--text3); text-align: right; margin-bottom: 6px; }
+</style>
+</head>
+<body>
+
+<!-- ────────── SIDEBAR ────────── -->
+<nav class="sidebar">
+  <div class="sb-logo"><div class="sb-logo-dot"></div> Kore·A·Round 2026</div>
+
+  <div class="sb-section">
+    <div class="sb-section-label">워크스페이스</div>
+    <div class="sb-item active" onclick="showTab('overview')"><span class="icon">🏠</span> 개요 & 현황</div>
+    <div class="sb-item" onclick="showTab('programs')"><span class="icon">🌐</span> 10개 프로그램</div>
+    <div class="sb-item" onclick="showTab('tasks')"><span class="icon">✅</span> 전체 태스크</div>
+    <div class="sb-item" onclick="showTab('schedule')"><span class="icon">📅</span> 추진 일정</div>
+    <div class="sb-item" onclick="showTab('team')"><span class="icon">👥</span> 팀 & 역할</div>
+  </div>
+
+  <hr class="sb-divider">
+
+  <div class="sb-section">
+    <div class="sb-section-label">단계별 관리</div>
+    <div class="sb-item" onclick="showTab('tasks')"><span class="icon">📋</span> 착수·기획 단계</div>
+    <div class="sb-item" onclick="showTab('tasks')"><span class="icon">🚀</span> 운영 단계</div>
+    <div class="sb-item" onclick="showTab('tasks')"><span class="icon">📊</span> 정산·마감</div>
+  </div>
+
+  <hr class="sb-divider">
+
+  <div class="sb-section">
+    <div class="sb-section-label">파트너</div>
+    <div class="sb-item"><span class="icon">🏛</span> KOFICE (주관)</div>
+    <div class="sb-item"><span class="icon">🏢</span> (주) 프럼에이</div>
+  </div>
+</nav>
+
+<!-- ────────── MAIN ────────── -->
+<main class="main">
+
+  <!-- ====== TAB: 개요 ====== -->
+  <div id="tab-overview">
+    <div class="page-icon">🌏</div>
+    <div class="page-title">2026 쌍방향 국제문화협업 지원</div>
+    <div class="page-sub">
+      <span>📁 Kore·A·Round Culture</span>
+      <span>📆 2026.03 – 12.27</span>
+      <span class="tag blue" style="font-size:11px">진행중</span>
+    </div>
+
+    <!-- Stats -->
+    <div class="stats">
+      <div class="stat-card">
+        <div class="stat-label">참여 국가</div>
+        <div class="stat-val">9</div>
+        <div class="stat-sub">8개국 + 프랑스 2건</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">총 프로그램</div>
+        <div class="stat-val">10</div>
+        <div class="stat-sub">시각 3 / 공연 5 / 복합 2</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">총 예산</div>
+        <div class="stat-val">7.2억</div>
+        <div class="stat-sub">사업별 예산 79%</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">과업 완료율</div>
+        <div class="stat-val" id="overall-pct">0%</div>
+        <div class="stat-sub">체크리스트 기준</div>
+      </div>
+    </div>
+
+    <!-- Phase Timeline -->
+    <div class="section">
+      <div class="section-title">📍 사업 단계</div>
+      <div class="timeline">
+        <div class="phase">
+          <div class="phase-name">① 착수·기획</div>
+          <div class="phase-bar"><div class="phase-fill" style="width:70%;background:#1a1a1a"></div></div>
+          <div class="phase-date">3월 ~ 4월</div>
+        </div>
+        <div class="phase">
+          <div class="phase-name">② 참여자 관리</div>
+          <div class="phase-bar"><div class="phase-fill" style="width:30%;background:#378add"></div></div>
+          <div class="phase-date">4월 ~ 진행중</div>
+        </div>
+        <div class="phase">
+          <div class="phase-name">③ 인바운드 운영</div>
+          <div class="phase-bar"><div class="phase-fill" style="width:10%;background:#1d9e75"></div></div>
+          <div class="phase-date">5월 ~ 11월</div>
+        </div>
+        <div class="phase">
+          <div class="phase-name">④ 아웃바운드 운영</div>
+          <div class="phase-bar"><div class="phase-fill" style="width:5%;background:#d85a30"></div></div>
+          <div class="phase-date">5월 ~ 12월</div>
+        </div>
+        <div class="phase">
+          <div class="phase-name">⑤ 정산·결과보고</div>
+          <div class="phase-bar"><div class="phase-fill" style="width:0%;background:#888"></div></div>
+          <div class="phase-date">12월</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Quick Checklist -->
+    <div class="section">
+      <div class="section-title">🔥 이번 주 우선 과제</div>
+      <div class="notice">⚠️ 아웃바운드 일정 미정 사업 조기 확정 필요 — 항공·숙박 예약 리드타임 고려</div>
+
+      <div class="checklist-block">
+        <h4>착수 직후 (3–4월) <span class="tag amber">진행중</span></h4>
+        <div class="check-item">
+          <div class="cb checked" onclick="toggleCheck(this)"></div>
+          <div class="check-text">계약 체결 및 착수 보고서 제출</div>
+          <div class="check-meta">강기영 대표</div>
+        </div>
+        <div class="check-item">
+          <div class="cb checked" onclick="toggleCheck(this)"></div>
+          <div class="check-text">10개 사업별 담당자 컨택포인트 취합</div>
+          <div class="check-meta">최은혜 실장</div>
+        </div>
+        <div class="check-item">
+          <div class="cb checked" onclick="toggleCheck(this)"></div>
+          <div class="check-text">마스터 시트 세팅 (사업개요·예산·일정·연락망)</div>
+          <div class="check-meta">김윤미 부장</div>
+        </div>
+        <div class="check-item">
+          <div class="cb" onclick="toggleCheck(this)"></div>
+          <div class="check-text">협업 플랫폼 (Flow) 프로젝트 생성 및 팀원 초대</div>
+          <div class="check-meta">최은혜 실장</div>
+        </div>
+        <div class="check-item">
+          <div class="cb" onclick="toggleCheck(this)"></div>
+          <div class="check-text">사업별 예산 가이드 배포 및 집행 방침 공유</div>
+          <div class="check-meta">김윤미 부장</div>
+        </div>
+        <div class="check-item">
+          <div class="cb" onclick="toggleCheck(this)"></div>
+          <div class="check-text">키비주얼 시안 확정 (코리아라운드 컬처 2026)</div>
+          <div class="check-meta">홍성미 실장</div>
+        </div>
+        <div class="check-item">
+          <div class="cb" onclick="toggleCheck(this)"></div>
+          <div class="check-text">홈페이지 아카이브 업데이트 (2026 사업 반영)</div>
+          <div class="check-meta">안재경 디렉터</div>
+        </div>
+        <div class="check-item">
+          <div class="cb" onclick="toggleCheck(this)"></div>
+          <div class="check-text">전체 브리지 노트 제작 착수 (9개국 문화 가이드)</div>
+          <div class="check-meta">이의성 디렉터</div>
+        </div>
+      </div>
+
+      <div class="checklist-block">
+        <h4>참여자 관리 (D-50 ~ 진행중) <span class="tag blue">예정</span></h4>
+        <div class="check-item">
+          <div class="cb" onclick="toggleCheck(this)"></div>
+          <div class="check-text">해외 참여자 공식 초청장 발송 (10개 사업)</div>
+          <div class="check-meta">오성진 매니저</div>
+        </div>
+        <div class="check-item">
+          <div class="cb" onclick="toggleCheck(this)"></div>
+          <div class="check-text">항공권 발권 (여행사 협력 — 실시간 잔여 확인)</div>
+          <div class="check-meta">이롬투어</div>
+        </div>
+        <div class="check-item">
+          <div class="cb" onclick="toggleCheck(this)"></div>
+          <div class="check-text">K-ETA / 비자 필요 여부 국가별 확인 및 지원</div>
+          <div class="check-meta">오성진 매니저</div>
+        </div>
+        <div class="check-item">
+          <div class="cb" onclick="toggleCheck(this)"></div>
+          <div class="check-text">숙박·수송 예약 (참여자 식이제한 사전 조사 포함)</div>
+          <div class="check-meta">각 팀 PM</div>
+        </div>
+        <div class="check-item">
+          <div class="cb" onclick="toggleCheck(this)"></div>
+          <div class="check-text">단체 여행자 보험 가입 (전 참여자)</div>
+          <div class="check-meta">김윤미 부장</div>
+        </div>
+        <div class="check-item">
+          <div class="cb" onclick="toggleCheck(this)"></div>
+          <div class="check-text">웰컴 가이드북 제작 및 발송 (현지 식당·교통·문화 포함)</div>
+          <div class="check-meta">오성진 매니저</div>
+        </div>
+      </div>
+
+      <div class="checklist-block">
+        <h4>홍보 & 콘텐츠 <span class="tag gray">계속</span></h4>
+        <div class="check-item">
+          <div class="cb" onclick="toggleCheck(this)"></div>
+          <div class="check-text">소셜미디어 운영 세부계획 수립 (Preview/Interview/News/Review)</div>
+          <div class="check-meta">안재경 디렉터</div>
+        </div>
+        <div class="check-item">
+          <div class="cb" onclick="toggleCheck(this)"></div>
+          <div class="check-text">사업 티저 영상 제작 (10개 프로그램 키워드 편집)</div>
+          <div class="check-meta">안재경 디렉터</div>
+        </div>
+        <div class="check-item">
+          <div class="cb" onclick="toggleCheck(this)"></div>
+          <div class="check-text">통합 예약 플랫폼 세팅 (무료: 네이버 / 유료: 놀티켓)</div>
+          <div class="check-meta">이슬아 디렉터</div>
+        </div>
+        <div class="check-item">
+          <div class="cb" onclick="toggleCheck(this)"></div>
+          <div class="check-text">기념품 최종 수량·디자인 확정 (에코백·뱃지·티켓북·핸드타월키링)</div>
+          <div class="check-meta">홍성미 실장</div>
+        </div>
+        <div class="check-item">
+          <div class="cb" onclick="toggleCheck(this)"></div>
+          <div class="check-text">국영문 보도자료 1차 작성 (사업 개요 버전)</div>
+          <div class="check-meta">박수진 실장</div>
+        </div>
+      </div>
+
+      <div class="checklist-block">
+        <h4>현장 운영 (행사 D-day) <span class="tag gray">추후</span></h4>
+        <div class="check-item">
+          <div class="cb" onclick="toggleCheck(this)"></div>
+          <div class="check-text">행사장별 안전관리 계획서 수립 (비상대피 동선 포함)</div>
+          <div class="check-meta">한아름 실장</div>
+        </div>
+        <div class="check-item">
+          <div class="cb" onclick="toggleCheck(this)"></div>
+          <div class="check-text">현장 투입 인력 배치표 확정 (무대·콘솔·티켓·객석 등)</div>
+          <div class="check-meta">최은혜 실장</div>
+        </div>
+        <div class="check-item">
+          <div class="cb" onclick="toggleCheck(this)"></div>
+          <div class="check-text">브릿지 토크 프로그램 모더레이터 섭외 및 진행 확정</div>
+          <div class="check-meta">각 팀 PM</div>
+        </div>
+        <div class="check-item">
+          <div class="cb" onclick="toggleCheck(this)"></div>
+          <div class="check-text">만족도조사 설문 문항 설계 (국영문 + 현지어)</div>
+          <div class="check-meta">이슬아 디렉터</div>
+        </div>
+      </div>
+
+      <div class="checklist-block">
+        <h4>정산 & 결과보고 (12월) <span class="tag gray">미착수</span></h4>
+        <div class="check-item">
+          <div class="cb" onclick="toggleCheck(this)"></div>
+          <div class="check-text">전 사업 증빙서류 최종 취합 및 검토</div>
+          <div class="check-meta">김윤미 부장</div>
+        </div>
+        <div class="check-item">
+          <div class="cb" onclick="toggleCheck(this)"></div>
+          <div class="check-text">해외 송금 최종 확인 (Wise / 은행이체 수취 확인)</div>
+          <div class="check-meta">김윤미 부장</div>
+        </div>
+        <div class="check-item">
+          <div class="cb" onclick="toggleCheck(this)"></div>
+          <div class="check-text">결과보고서 5부 + 정산보고서 1부 제출</div>
+          <div class="check-meta">강기영 대표</div>
+        </div>
+        <div class="check-item">
+          <div class="cb" onclick="toggleCheck(this)"></div>
+          <div class="check-text">외장하드 — 전 과업 수행 자료 일체 제출</div>
+          <div class="check-meta">최은혜 실장</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ====== TAB: 10개 프로그램 ====== -->
+  <div id="tab-programs" style="display:none">
+    <div class="page-icon">🗺️</div>
+    <div class="page-title">10개 협업 프로그램</div>
+    <div class="page-sub"><span>1년간 9개국 시각·공연·복합 장르 협업</span><span>세부 예산 총 약 7.2억 원</span></div>
+
+    <div class="program-grid">
+
+      <div class="prog-card">
+        <div class="prog-header">
+          <div class="prog-title">경기문화재단 백남준아트센터 ↔ 상파울루 피나코테카</div>
+          <span class="tag green">시각</span>
+        </div>
+        <div class="prog-country">🇧🇷 한국 – 브라질</div>
+        <div class="prog-tags">
+          <span class="tag amber">인바운드 11월</span>
+          <span class="tag amber">아웃바운드 11월</span>
+        </div>
+        <div class="prog-progress">
+          <div style="display:flex;justify-content:space-between">
+            <span style="font-size:10px;color:var(--text3)">진행률</span>
+            <span style="font-size:10px;color:var(--text3)">10%</span>
+          </div>
+          <div class="prog-progress-bar"><div class="prog-progress-fill" style="width:10%"></div></div>
+          <div class="prog-progress-label">⚠️ 직항 없음 — 경유 25~35h, 브라질 여행경보 2단계</div>
+        </div>
+      </div>
+
+      <div class="prog-card">
+        <div class="prog-header">
+          <div class="prog-title">재단법인 세종문화회관 ↔ 국립 기메 동양 박물관</div>
+          <span class="tag green">시각</span>
+        </div>
+        <div class="prog-country">🇫🇷 한국 – 프랑스</div>
+        <div class="prog-tags">
+          <span class="tag gray">일정 미정</span>
+          <span class="tag gray">장소 미정</span>
+        </div>
+        <div class="prog-progress">
+          <div style="display:flex;justify-content:space-between">
+            <span style="font-size:10px;color:var(--text3)">진행률</span>
+            <span style="font-size:10px;color:var(--text3)">5%</span>
+          </div>
+          <div class="prog-progress-bar"><div class="prog-progress-fill" style="width:5%"></div></div>
+          <div class="prog-progress-label">기메 박물관 한국실 연계 — 작품 온습도 조건 확인 필요</div>
+        </div>
+      </div>
+
+      <div class="prog-card">
+        <div class="prog-header">
+          <div class="prog-title">청주공예비엔날레 조직위 ↔ 태국문화부 현대예술문화국</div>
+          <span class="tag green">시각</span>
+        </div>
+        <div class="prog-country">🇹🇭 한국 – 태국</div>
+        <div class="prog-tags">
+          <span class="tag gray">일정 미정</span>
+        </div>
+        <div class="prog-progress">
+          <div style="display:flex;justify-content:space-between">
+            <span style="font-size:10px;color:var(--text3)">진행률</span>
+            <span style="font-size:10px;color:var(--text3)">5%</span>
+          </div>
+          <div class="prog-progress-bar"><div class="prog-progress-fill" style="width:5%"></div></div>
+          <div class="prog-progress-label">작품 보험·보존 기준 사전 확인 / 온습도·조도 점검</div>
+        </div>
+      </div>
+
+      <div class="prog-card">
+        <div class="prog-header">
+          <div class="prog-title">위사 ↔ 일렉트라 페스티벌</div>
+          <span class="tag blue">공연</span>
+        </div>
+        <div class="prog-country">🇨🇦 한국 – 캐나다 (몬트리올)</div>
+        <div class="prog-tags">
+          <span class="tag gray">일정 미정</span>
+        </div>
+        <div class="prog-progress">
+          <div style="display:flex;justify-content:space-between">
+            <span style="font-size:10px;color:var(--text3)">진행률</span>
+            <span style="font-size:10px;color:var(--text3)">5%</span>
+          </div>
+          <div class="prog-progress-bar"><div class="prog-progress-fill" style="width:5%"></div></div>
+          <div class="prog-progress-label">대형 음향·조명 사전 기술 협의 / 페스티벌 홍보물 가이드 준수</div>
+        </div>
+      </div>
+
+      <div class="prog-card">
+        <div class="prog-header">
+          <div class="prog-title">극단 58번국도 ↔ 온센 드래곤</div>
+          <span class="tag blue">공연</span>
+        </div>
+        <div class="prog-country">🇯🇵 한국 – 일본</div>
+        <div class="prog-tags">
+          <span class="tag gray">일정 미정</span>
+        </div>
+        <div class="prog-progress">
+          <div style="display:flex;justify-content:space-between">
+            <span style="font-size:10px;color:var(--text3)">진행률</span>
+            <span style="font-size:10px;color:var(--text3)">5%</span>
+          </div>
+          <div class="prog-progress-bar"><div class="prog-progress-fill" style="width:5%"></div></div>
+          <div class="prog-progress-label">대사 중심 공연 — 다국어 자막 방식 사전 협의 필요</div>
+        </div>
+      </div>
+
+      <div class="prog-card">
+        <div class="prog-header">
+          <div class="prog-title">올위아트컴퍼니 ↔ 로커스</div>
+          <span class="tag blue">공연</span>
+        </div>
+        <div class="prog-country">🇦🇺 한국 – 호주</div>
+        <div class="prog-tags">
+          <span class="tag gray">일정 미정</span>
+        </div>
+        <div class="prog-progress">
+          <div style="display:flex;justify-content:space-between">
+            <span style="font-size:10px;color:var(--text3)">진행률</span>
+            <span style="font-size:10px;color:var(--text3)">5%</span>
+          </div>
+          <div class="prog-progress-bar"><div class="prog-progress-fill" style="width:5%"></div></div>
+          <div class="prog-progress-label">장애인 무용수 이동·숙박 접근성 / 리허설 공간 확보</div>
+        </div>
+      </div>
+
+      <div class="prog-card">
+        <div class="prog-header">
+          <div class="prog-title">리퀴드 사운드 ↔ 아 필레타</div>
+          <span class="tag blue">공연</span>
+        </div>
+        <div class="prog-country">🇫🇷 한국 – 프랑스 (전통음악)</div>
+        <div class="prog-tags">
+          <span class="tag gray">일정 미정</span>
+        </div>
+        <div class="prog-progress">
+          <div style="display:flex;justify-content:space-between">
+            <span style="font-size:10px;color:var(--text3)">진행률</span>
+            <span style="font-size:10px;color:var(--text3)">5%</span>
+          </div>
+          <div class="prog-progress-bar"><div class="prog-progress-fill" style="width:5%"></div></div>
+          <div class="prog-progress-label">전통 악기 운송 보험 / 전통 의상 분장 합주 리허설</div>
+        </div>
+      </div>
+
+      <div class="prog-card">
+        <div class="prog-header">
+          <div class="prog-title">왓와이 아트 ↔ 솔리스텐앙상블 칼라이도스코프</div>
+          <span class="tag blue">공연</span>
+        </div>
+        <div class="prog-country">🇩🇪 한국 – 독일</div>
+        <div class="prog-tags">
+          <span class="tag gray">일정 미정</span>
+        </div>
+        <div class="prog-progress">
+          <div style="display:flex;justify-content:space-between">
+            <span style="font-size:10px;color:var(--text3)">진행률</span>
+            <span style="font-size:10px;color:var(--text3)">5%</span>
+          </div>
+          <div class="prog-progress-bar"><div class="prog-progress-fill" style="width:5%"></div></div>
+          <div class="prog-progress-label">악기·퍼포먼스 동선 무대 안전 점검 / 통합 리허설</div>
+        </div>
+      </div>
+
+      <div class="prog-card">
+        <div class="prog-header">
+          <div class="prog-title">집 ↔ 뉴이어 외</div>
+          <span class="tag purple">복합</span>
+        </div>
+        <div class="prog-country">🇺🇸 한국 – 미국</div>
+        <div class="prog-tags">
+          <span class="tag gray">일정 미정</span>
+        </div>
+        <div class="prog-progress">
+          <div style="display:flex;justify-content:space-between">
+            <span style="font-size:10px;color:var(--text3)">진행률</span>
+            <span style="font-size:10px;color:var(--text3)">5%</span>
+          </div>
+          <div class="prog-progress-bar"><div class="prog-progress-fill" style="width:5%"></div></div>
+          <div class="prog-progress-label">복합 장르 세부 프로그램 구성 확정 필요</div>
+        </div>
+      </div>
+
+      <div class="prog-card">
+        <div class="prog-header">
+          <div class="prog-title">사단법인 아프리카문화연구소 ↔ 웨스턴케이프 대학교 외</div>
+          <span class="tag purple">복합</span>
+        </div>
+        <div class="prog-country">🇿🇦 한국 – 남아프리카공화국</div>
+        <div class="prog-tags">
+          <span class="tag gray">일정 미정</span>
+        </div>
+        <div class="prog-progress">
+          <div style="display:flex;justify-content:space-between">
+            <span style="font-size:10px;color:var(--text3)">진행률</span>
+            <span style="font-size:10px;color:var(--text3)">5%</span>
+          </div>
+          <div class="prog-progress-bar"><div class="prog-progress-fill" style="width:5%"></div></div>
+          <div class="prog-progress-label">현지 협력기관 연계 / 복합 장르 세부 기획</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ====== TAB: 전체 태스크 ====== -->
+  <div id="tab-tasks" style="display:none">
+    <div class="page-icon">✅</div>
+    <div class="page-title">전체 태스크 목록</div>
+    <div class="page-sub"><span>단계별 업무 체크리스트 — 마스터 시트 연동용</span></div>
+
+    <table class="task-table">
+      <thead>
+        <tr>
+          <th style="width:30px"></th>
+          <th>과업명</th>
+          <th style="width:90px">담당</th>
+          <th style="width:80px">상태</th>
+          <th style="width:80px">마감</th>
+        </tr>
+      </thead>
+      <tbody id="task-tbody">
+        <!-- 착수 -->
+        <tr><td colspan="5" style="padding:14px 12px 4px;font-size:11px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:0.07em;">— 착수·기획 —</td></tr>
+        <tr class="task-row" onclick="toggleRow(this)">
+          <td><div class="cb checked" onclick="event.stopPropagation();toggleCheck(this)"></div></td>
+          <td><div class="task-name"><span class="task-text done">계약 체결 및 착수 보고서 제출</span></div></td>
+          <td><span class="tag gray">강기영</span></td>
+          <td><span class="tag green">완료</span></td>
+          <td style="font-size:12px;color:var(--text3)">3월 초</td>
+        </tr>
+        <tr class="task-row" onclick="toggleRow(this)">
+          <td><div class="cb checked" onclick="event.stopPropagation();toggleCheck(this)"></div></td>
+          <td><div class="task-name"><span class="task-text done">10개 사업 담당자 컨택포인트 취합</span></div></td>
+          <td><span class="tag gray">최은혜</span></td>
+          <td><span class="tag green">완료</span></td>
+          <td style="font-size:12px;color:var(--text3)">3월</td>
+        </tr>
+        <tr class="task-row">
+          <td><div class="cb" onclick="event.stopPropagation();toggleCheck(this)"></div></td>
+          <td><div class="task-name"><span class="task-text">마스터 시트 세팅 및 공유 (Flow 플랫폼)</span></div></td>
+          <td><span class="tag gray">김윤미</span></td>
+          <td><span class="tag amber">진행중</span></td>
+          <td style="font-size:12px;color:var(--text3)">3–4월</td>
+        </tr>
+        <tr class="task-row">
+          <td><div class="cb" onclick="event.stopPropagation();toggleCheck(this)"></div></td>
+          <td><div class="task-name"><span class="task-text">사업별 R&R 협의 및 업무 분장 확정</span></div></td>
+          <td><span class="tag gray">각 팀 PM</span></td>
+          <td><span class="tag amber">진행중</span></td>
+          <td style="font-size:12px;color:var(--text3)">4월</td>
+        </tr>
+        <tr class="task-row">
+          <td><div class="cb" onclick="event.stopPropagation();toggleCheck(this)"></div></td>
+          <td><div class="task-name"><span class="task-text">키비주얼 시안 확정 및 홍보물 제작 착수</span></div></td>
+          <td><span class="tag gray">홍성미</span></td>
+          <td><span class="tag blue">예정</span></td>
+          <td style="font-size:12px;color:var(--text3)">4월</td>
+        </tr>
+        <tr class="task-row">
+          <td><div class="cb" onclick="event.stopPropagation();toggleCheck(this)"></div></td>
+          <td><div class="task-name"><span class="task-text">예산 집행 계획 수립 (환율 고려)</span></div></td>
+          <td><span class="tag gray">김윤미</span></td>
+          <td><span class="tag blue">예정</span></td>
+          <td style="font-size:12px;color:var(--text3)">4월</td>
+        </tr>
+        <!-- 참여자 관리 -->
+        <tr><td colspan="5" style="padding:14px 12px 4px;font-size:11px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:0.07em;">— 참여자 관리 (D-50) —</td></tr>
+        <tr class="task-row">
+          <td><div class="cb" onclick="event.stopPropagation();toggleCheck(this)"></div></td>
+          <td><div class="task-name"><span class="task-text">해외 참여자 DB 취합 및 공식 초청장 발송</span></div></td>
+          <td><span class="tag gray">오성진</span></td>
+          <td><span class="tag blue">예정</span></td>
+          <td style="font-size:12px;color:var(--text3)">사업 D-50</td>
+        </tr>
+        <tr class="task-row">
+          <td><div class="cb" onclick="event.stopPropagation();toggleCheck(this)"></div></td>
+          <td><div class="task-name"><span class="task-text">국가별 K-ETA / 비자 지원 (C3·C4)</span></div></td>
+          <td><span class="tag gray">오성진</span></td>
+          <td><span class="tag blue">예정</span></td>
+          <td style="font-size:12px;color:var(--text3)">사업 D-40</td>
+        </tr>
+        <tr class="task-row">
+          <td><div class="cb" onclick="event.stopPropagation();toggleCheck(this)"></div></td>
+          <td><div class="task-name"><span class="task-text">항공권 발권 (이롬투어 협력)</span></div></td>
+          <td><span class="tag gray">이롬투어</span></td>
+          <td><span class="tag blue">예정</span></td>
+          <td style="font-size:12px;color:var(--text3)">사업 D-35</td>
+        </tr>
+        <tr class="task-row">
+          <td><div class="cb" onclick="event.stopPropagation();toggleCheck(this)"></div></td>
+          <td><div class="task-name"><span class="task-text">숙박·수송 예약 (식이제한 사전 조사)</span></div></td>
+          <td><span class="tag gray">각 팀 PM</span></td>
+          <td><span class="tag blue">예정</span></td>
+          <td style="font-size:12px;color:var(--text3)">사업 D-30</td>
+        </tr>
+        <tr class="task-row">
+          <td><div class="cb" onclick="event.stopPropagation();toggleCheck(this)"></div></td>
+          <td><div class="task-name"><span class="task-text">단체 여행자 보험 + 행사보험 + 작품보험 가입</span></div></td>
+          <td><span class="tag gray">김윤미</span></td>
+          <td><span class="tag blue">예정</span></td>
+          <td style="font-size:12px;color:var(--text3)">사업 D-30</td>
+        </tr>
+        <tr class="task-row">
+          <td><div class="cb" onclick="event.stopPropagation();toggleCheck(this)"></div></td>
+          <td><div class="task-name"><span class="task-text">웰컴 가이드북 제작 및 발송</span></div></td>
+          <td><span class="tag gray">오성진</span></td>
+          <td><span class="tag blue">예정</span></td>
+          <td style="font-size:12px;color:var(--text3)">사업 D-7</td>
+        </tr>
+        <!-- 홍보 -->
+        <tr><td colspan="5" style="padding:14px 12px 4px;font-size:11px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:0.07em;">— 홍보 & 콘텐츠 —</td></tr>
+        <tr class="task-row">
+          <td><div class="cb" onclick="event.stopPropagation();toggleCheck(this)"></div></td>
+          <td><div class="task-name"><span class="task-text">소셜미디어 세부 운영 계획 수립</span></div></td>
+          <td><span class="tag gray">안재경</span></td>
+          <td><span class="tag amber">진행중</span></td>
+          <td style="font-size:12px;color:var(--text3)">4월</td>
+        </tr>
+        <tr class="task-row">
+          <td><div class="cb" onclick="event.stopPropagation();toggleCheck(this)"></div></td>
+          <td><div class="task-name"><span class="task-text">사업 소개 티저 영상 제작</span></div></td>
+          <td><span class="tag gray">안재경</span></td>
+          <td><span class="tag blue">예정</span></td>
+          <td style="font-size:12px;color:var(--text3)">4–5월</td>
+        </tr>
+        <tr class="task-row">
+          <td><div class="cb" onclick="event.stopPropagation();toggleCheck(this)"></div></td>
+          <td><div class="task-name"><span class="task-text">단체별 사전 PREVIEW 셀프캠 영상 (10건)</span></div></td>
+          <td><span class="tag gray">각 팀 PM</span></td>
+          <td><span class="tag blue">예정</span></td>
+          <td style="font-size:12px;color:var(--text3)">사업별</td>
+        </tr>
+        <tr class="task-row">
+          <td><div class="cb" onclick="event.stopPropagation();toggleCheck(this)"></div></td>
+          <td><div class="task-name"><span class="task-text">아티스트 인터뷰 영상 10건 제작·편집</span></div></td>
+          <td><span class="tag gray">안재경</span></td>
+          <td><span class="tag blue">예정</span></td>
+          <td style="font-size:12px;color:var(--text3)">사업별</td>
+        </tr>
+        <tr class="task-row">
+          <td><div class="cb" onclick="event.stopPropagation();toggleCheck(this)"></div></td>
+          <td><div class="task-name"><span class="task-text">국영문 보도자료 작성 및 매체 배포</span></div></td>
+          <td><span class="tag gray">박수진</span></td>
+          <td><span class="tag blue">예정</span></td>
+          <td style="font-size:12px;color:var(--text3)">사업별</td>
+        </tr>
+        <tr class="task-row">
+          <td><div class="cb" onclick="event.stopPropagation();toggleCheck(this)"></div></td>
+          <td><div class="task-name"><span class="task-text">기념품 최종 수량·디자인 확정 및 발주</span></div></td>
+          <td><span class="tag gray">홍성미</span></td>
+          <td><span class="tag blue">예정</span></td>
+          <td style="font-size:12px;color:var(--text3)">5월 이전</td>
+        </tr>
+        <!-- 현장 -->
+        <tr><td colspan="5" style="padding:14px 12px 4px;font-size:11px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:0.07em;">— 현장 운영 —</td></tr>
+        <tr class="task-row">
+          <td><div class="cb" onclick="event.stopPropagation();toggleCheck(this)"></div></td>
+          <td><div class="task-name"><span class="task-text">행사장별 안전관리 계획서 수립</span></div></td>
+          <td><span class="tag gray">각 팀 PM</span></td>
+          <td><span class="tag blue">예정</span></td>
+          <td style="font-size:12px;color:var(--text3)">사업 D-14</td>
+        </tr>
+        <tr class="task-row">
+          <td><div class="cb" onclick="event.stopPropagation();toggleCheck(this)"></div></td>
+          <td><div class="task-name"><span class="task-text">현장 인력 배치 확정 (무대·콘솔·티켓·객석 등)</span></div></td>
+          <td><span class="tag gray">최은혜</span></td>
+          <td><span class="tag blue">예정</span></td>
+          <td style="font-size:12px;color:var(--text3)">사업 D-7</td>
+        </tr>
+        <tr class="task-row">
+          <td><div class="cb" onclick="event.stopPropagation();toggleCheck(this)"></div></td>
+          <td><div class="task-name"><span class="task-text">브릿지 토크 모더레이터 섭외 및 진행 확정</span></div></td>
+          <td><span class="tag gray">각 팀 PM</span></td>
+          <td><span class="tag blue">예정</span></td>
+          <td style="font-size:12px;color:var(--text3)">사업 D-14</td>
+        </tr>
+        <tr class="task-row">
+          <td><div class="cb" onclick="event.stopPropagation();toggleCheck(this)"></div></td>
+          <td><div class="task-name"><span class="task-text">만족도조사 설문 설계 (현지어 포함)</span></div></td>
+          <td><span class="tag gray">이슬아</span></td>
+          <td><span class="tag blue">예정</span></td>
+          <td style="font-size:12px;color:var(--text3)">사업 D-7</td>
+        </tr>
+        <!-- 정산 -->
+        <tr><td colspan="5" style="padding:14px 12px 4px;font-size:11px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:0.07em;">— 정산 & 마감 —</td></tr>
+        <tr class="task-row">
+          <td><div class="cb" onclick="event.stopPropagation();toggleCheck(this)"></div></td>
+          <td><div class="task-name"><span class="task-text">전 사업 증빙서류 최종 취합</span></div></td>
+          <td><span class="tag gray">김윤미</span></td>
+          <td><span class="tag gray">미착수</span></td>
+          <td style="font-size:12px;color:var(--text3)">12월 초</td>
+        </tr>
+        <tr class="task-row">
+          <td><div class="cb" onclick="event.stopPropagation();toggleCheck(this)"></div></td>
+          <td><div class="task-name"><span class="task-text">해외 송금 최종 수취 확인 (Wise / 은행이체)</span></div></td>
+          <td><span class="tag gray">김윤미</span></td>
+          <td><span class="tag gray">미착수</span></td>
+          <td style="font-size:12px;color:var(--text3)">12월</td>
+        </tr>
+        <tr class="task-row">
+          <td><div class="cb" onclick="event.stopPropagation();toggleCheck(this)"></div></td>
+          <td><div class="task-name"><span class="task-text">결과보고서 5부 + 정산보고서 1부 제출</span></div></td>
+          <td><span class="tag gray">강기영</span></td>
+          <td><span class="tag gray">미착수</span></td>
+          <td style="font-size:12px;color:var(--text3)">12월 1주</td>
+        </tr>
+        <tr class="task-row">
+          <td><div class="cb" onclick="event.stopPropagation();toggleCheck(this)"></div></td>
+          <td><div class="task-name"><span class="task-text">외장하드 — 전 과업 수행 자료 일체 제출</span></div></td>
+          <td><span class="tag gray">최은혜</span></td>
+          <td><span class="tag gray">미착수</span></td>
+          <td style="font-size:12px;color:var(--text3)">12월 1주</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- ====== TAB: 추진 일정 ====== -->
+  <div id="tab-schedule" style="display:none">
+    <div class="page-icon">📅</div>
+    <div class="page-title">추진 일정 (간트 차트)</div>
+    <div class="page-sub"><span>2026년 3월 ~ 12월</span></div>
+
+    <div class="gantt">
+      <div class="gantt-months">
+        <div class="gantt-month">3월</div><div class="gantt-month">4월</div><div class="gantt-month">5월</div>
+        <div class="gantt-month">6월</div><div class="gantt-month">7월</div><div class="gantt-month">8월</div>
+        <div class="gantt-month">9월</div><div class="gantt-month">10월</div><div class="gantt-month">11월</div>
+        <div class="gantt-month">12월</div>
+      </div>
+      <!-- bar: left/width in % of 10 months (0=Mar, 100=Dec) -->
+      <div class="gantt-row"><div class="gantt-label">계약·착수보고</div><div class="gantt-track"><div class="gantt-bar" style="left:0%;width:10%;background:var(--text)"><span>계약</span></div></div></div>
+      <div class="gantt-row"><div class="gantt-label">기획·세부계획</div><div class="gantt-track"><div class="gantt-bar" style="left:0%;width:20%;background:#378add"><span>기획</span></div></div></div>
+      <div class="gantt-row"><div class="gantt-label">키비주얼·홍보물</div><div class="gantt-track"><div class="gantt-bar" style="left:5%;width:30%;background:#63a0d4"><span>디자인</span></div></div></div>
+      <div class="gantt-row"><div class="gantt-label">소셜미디어 운영</div><div class="gantt-track"><div class="gantt-bar" style="left:10%;width:80%;background:#4a90c0"><span>SNS 상시 운영</span></div></div></div>
+      <div class="gantt-row"><div class="gantt-label">인바운드 운영</div><div class="gantt-track"><div class="gantt-bar" style="left:20%;width:70%;background:#1d9e75"><span>인바운드 (5월~11월)</span></div></div></div>
+      <div class="gantt-row"><div class="gantt-label">아웃바운드 운영</div><div class="gantt-track"><div class="gantt-bar" style="left:20%;width:80%;background:#3b7a57"><span>아웃바운드 (5월~12월)</span></div></div></div>
+      <div class="gantt-row"><div class="gantt-label">예산 집행·관리</div><div class="gantt-track"><div class="gantt-bar" style="left:0%;width:90%;background:#888"><span>상시</span></div></div></div>
+      <div class="gantt-row"><div class="gantt-label">만족도조사</div><div class="gantt-track"><div class="gantt-bar" style="left:50%;width:40%;background:#ba7517"><span>사업별 종료 후</span></div></div></div>
+      <div class="gantt-row"><div class="gantt-label">결과보고·정산</div><div class="gantt-track"><div class="gantt-bar" style="left:85%;width:15%;background:#b53030"><span>12월</span></div></div></div>
+    </div>
+
+    <div class="section">
+      <div class="section-title">📌 정기 보고 일정</div>
+      <table class="task-table">
+        <thead><tr><th>보고 구분</th><th>시기</th><th>내용</th><th>담당</th></tr></thead>
+        <tbody>
+          <tr><td><span class="tag blue">착수보고</span></td><td style="font-size:12px">3월 초</td><td style="font-size:12px">제안서·인력·일정·보안각서</td><td><span class="tag gray">강기영</span></td></tr>
+          <tr><td><span class="tag gray">주간보고</span></td><td style="font-size:12px">매주 목요일</td><td style="font-size:12px">현안 보고·진행 현황</td><td><span class="tag gray">최은혜</span></td></tr>
+          <tr><td><span class="tag amber">중간보고 1</span></td><td style="font-size:12px">6–7월</td><td style="font-size:12px">사업별 진행 현황·예산 집행률</td><td><span class="tag gray">강기영</span></td></tr>
+          <tr><td><span class="tag amber">중간보고 2</span></td><td style="font-size:12px">9–10월</td><td style="font-size:12px">후반기 사업 현황·이슈 보고</td><td><span class="tag gray">강기영</span></td></tr>
+          <tr><td><span class="tag red">결과보고</span></td><td style="font-size:12px">12월 1주</td><td style="font-size:12px">결과보고서 5부 + 정산보고서</td><td><span class="tag gray">강기영</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ====== TAB: 팀 ====== -->
+  <div id="tab-team" style="display:none">
+    <div class="page-icon">👥</div>
+    <div class="page-title">팀 & 역할</div>
+    <div class="page-sub"><span>총 31인 — F.A.Team 1/2/3 · F.A.Studio · F.A.Press · F.A.OPS</span></div>
+
+    <table class="task-table">
+      <thead><tr><th>이름·직책</th><th>분과</th><th>본 사업 역할</th><th>경력</th></tr></thead>
+      <tbody>
+        <tr><td><div style="display:flex;align-items:center;gap:8px"><div class="avatar" style="background:var(--text);color:var(--bg)">강</div><span style="font-size:13px">강기영 대표</span></div></td><td><span class="tag gray">F.A.</span></td><td style="font-size:12px">사업 총괄</td><td style="font-size:11px;color:var(--text3)">23년</td></tr>
+        <tr><td><div style="display:flex;align-items:center;gap:8px"><div class="avatar">최</div><span>최은혜 실장</span></div></td><td><span class="tag blue">Team 1</span></td><td style="font-size:12px">총괄 PM / 프로그램 운영</td><td style="font-size:11px;color:var(--text3)">18년</td></tr>
+        <tr><td><div style="display:flex;align-items:center;gap:8px"><div class="avatar">오</div><span>오성진 매니저</span></div></td><td><span class="tag blue">Team 1</span></td><td style="font-size:12px">참여 인력 관리 (영어 전담 100%)</td><td style="font-size:11px;color:var(--text3)">5년</td></tr>
+        <tr><td><div style="display:flex;align-items:center;gap:8px"><div class="avatar">김</div><span>김지윤 디렉터</span></div></td><td><span class="tag blue">Team 2</span></td><td style="font-size:12px">기획·운영 PM</td><td style="font-size:11px;color:var(--text3)">6년</td></tr>
+        <tr><td><div style="display:flex;align-items:center;gap:8px"><div class="avatar">한</div><span>한아름 실장</span></div></td><td><span class="tag blue">Team 3</span></td><td style="font-size:12px">프로젝트 총괄 (투어링 경험)</td><td style="font-size:11px;color:var(--text3)">15년</td></tr>
+        <tr><td><div style="display:flex;align-items:center;gap:8px"><div class="avatar">배</div><span>배지연 디렉터</span></div></td><td><span class="tag blue">Team 3</span></td><td style="font-size:12px">기획·운영 PM</td><td style="font-size:11px;color:var(--text3)">10년</td></tr>
+        <tr><td><div style="display:flex;align-items:center;gap:8px"><div class="avatar">김</div><span>김윤미 부장</span></div></td><td><span class="tag green">OPS</span></td><td style="font-size:12px">예산 담당 (25%)</td><td style="font-size:11px;color:var(--text3)">16년</td></tr>
+        <tr><td><div style="display:flex;align-items:center;gap:8px"><div class="avatar">홍</div><span>홍성미 실장</span></div></td><td><span class="tag amber">Studio</span></td><td style="font-size:12px">디자인 총괄 (30%)</td><td style="font-size:11px;color:var(--text3)">23년</td></tr>
+        <tr><td><div style="display:flex;align-items:center;gap:8px"><div class="avatar">안</div><span>안재경 디렉터</span></div></td><td><span class="tag purple">Press</span></td><td style="font-size:12px">홍보 전담 (100%)</td><td style="font-size:11px;color:var(--text3)">14년</td></tr>
+        <tr><td><div style="display:flex;align-items:center;gap:8px"><div class="avatar">박</div><span>박수진 실장</span></div></td><td><span class="tag purple">Press</span></td><td style="font-size:12px">콘텐츠 총괄</td><td style="font-size:11px;color:var(--text3)">18년</td></tr>
+        <tr><td><div style="display:flex;align-items:center;gap:8px"><div class="avatar">이</div><span>이의성 디렉터</span></div></td><td><span class="tag purple">Press</span></td><td style="font-size:12px">브릿지 노트 제작</td><td style="font-size:11px;color:var(--text3)">12년</td></tr>
+      </tbody>
+    </table>
+
+    <div style="margin-top:20px;padding:14px;background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius-lg)">
+      <div style="font-size:12px;color:var(--text2);margin-bottom:8px;font-weight:600">🤝 전문 협력 파트너</div>
+      <div style="display:flex;flex-wrap:wrap;gap:8px;">
+        <span class="tag gray">재미진사무소 (아티스트케어)</span>
+        <span class="tag gray">바올익스프레스 (물자운송)</span>
+        <span class="tag gray">리인앤코 (통번역)</span>
+        <span class="tag gray">이롬투어 (항공·체재)</span>
+        <span class="tag gray">트렌드넷 (글로벌홍보)</span>
+      </div>
+    </div>
+  </div>
+
+</main>
+
+<script>
+// ── Tab switching ──
+function showTab(id) {
+  ['overview','programs','tasks','schedule','team'].forEach(t => {
+    document.getElementById('tab-'+t).style.display = (t===id)?'block':'none';
+  });
+  document.querySelectorAll('.sb-item').forEach(el => el.classList.remove('active'));
+  const map = {overview:0,programs:1,tasks:2,schedule:3,team:4};
+  const items = document.querySelectorAll('.sb-item');
+  if(map[id]!==undefined) items[map[id]].classList.add('active');
+  localStorage.setItem('kac2026_tab', id);
+}
+
+// ── localStorage 저장/불러오기 ──
+function saveState() {
+  const checks = {};
+  document.querySelectorAll('.cb').forEach((el, i) => {
+    checks[i] = el.classList.contains('checked');
+  });
+  localStorage.setItem('kac2026_checks', JSON.stringify(checks));
+}
+
+function loadState() {
+  const saved = localStorage.getItem('kac2026_checks');
+  if (!saved) return;
+  const checks = JSON.parse(saved);
+  document.querySelectorAll('.cb').forEach((el, i) => {
+    if (checks[i]) {
+      el.classList.add('checked');
+      const row = el.closest('tr');
+      if (row) {
+        const txt = row.querySelector('.task-text');
+        if (txt) txt.classList.add('done');
+      }
+    }
+  });
+}
+
+// ── Checkbox ──
+function toggleCheck(el) {
+  el.classList.toggle('checked');
+  const row = el.closest('tr');
+  if(row) {
+    const txt = row.querySelector('.task-text');
+    if(txt) txt.classList.toggle('done', el.classList.contains('checked'));
+    const statusTag = row.querySelectorAll('.tag');
+    statusTag.forEach(t => {
+      if(t.textContent==='완료'||t.textContent==='진행중'||t.textContent==='예정'||t.textContent==='미착수') {
+        if(el.classList.contains('checked')) { t.className='tag green'; t.textContent='완료'; }
+      }
+    });
+  }
+  updateOverallPct();
+  saveState();
+}
+
+function updateOverallPct() {
+  const all = document.querySelectorAll('.cb');
+  const checked = document.querySelectorAll('.cb.checked');
+  const pct = all.length ? Math.round(checked.length/all.length*100) : 0;
+  const el = document.getElementById('overall-pct');
+  if(el) el.textContent = pct+'%';
+}
+
+// ── Init ──
+loadState();
+updateOverallPct();
+const savedTab = localStorage.getItem('kac2026_tab');
+if (savedTab) showTab(savedTab);
+</script>
+</body>
+</html>
